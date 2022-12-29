@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PokemonApp.Entities;
 
 namespace PokemonApp.Data
 {
@@ -9,9 +10,40 @@ namespace PokemonApp.Data
             
         }
 
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Reviewer> Reviewers { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<PokemonUser> PokemonUsers { get; set; }
+        public DbSet<PokemonCategory> PokemonCategories { get; set; }
+        public DbSet<Pokemon> Pokemons { get; set; }
+        public DbSet<Gym> Gyms { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PokemonCategory>()
+                .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
+            modelBuilder.Entity<PokemonCategory>()
+                .HasOne(p => p.Pokemon)
+                .WithMany(pc => pc.PokemonCategories)
+                .HasForeignKey(p => p.PokemonId);
+            modelBuilder.Entity<PokemonCategory>()
+                .HasOne(p => p.Category)
+                .WithMany(pc => pc.PokemonCategories)
+                .HasForeignKey(c => c.CategoryId);
+
+            modelBuilder.Entity<PokemonUser>()
+                .HasKey(po => new { po.PokemonId, UserId = po.UserId });
+            modelBuilder.Entity<PokemonUser>()
+                .HasOne(p => p.Pokemon)
+                .WithMany(pc => pc.PokemonUsers)
+                .HasForeignKey(p => p.PokemonId);
+            modelBuilder.Entity<PokemonUser>()
+                .HasOne(p => p.User)
+                .WithMany(pc => pc.PokemonUsers)
+                .HasForeignKey(c => c.UserId);
         }
     }
 }
