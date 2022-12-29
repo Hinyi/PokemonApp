@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using PokemonApp.Data;
+
 namespace PokemonApp
 {
     public class Program
@@ -7,7 +10,10 @@ namespace PokemonApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddDbContext<PokemonDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection"));
+            });
 
 
             builder.Services.AddControllers();
