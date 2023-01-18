@@ -1,11 +1,15 @@
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
 using PokemonApp.Data;
 using PokemonApp.Entities;
+using PokemonApp.Helper;
 using PokemonApp.Interfaces;
 using PokemonApp.Repository;
+using PokemonApp.Service.UserContext;
 
 namespace PokemonApp
 {
@@ -18,6 +22,27 @@ namespace PokemonApp
             //Logger
             var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
             logger.Debug("init main");
+
+            //JWT authorization
+            var authenticationSettings = new AuthenticationSettings();
+            builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+            builder.Services.AddSingleton(authenticationSettings);
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = authenticationSettings.JwtIssuer,
+                    ValidAudience = authenticationSettings.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+                };
+            });
 
             // Add services to the container.
             builder.Services.AddDbContext<PokemonDbContext>(options =>
@@ -34,6 +59,10 @@ namespace PokemonApp
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddControllers();
+
+            //usercontext service
+            builder.Services.AddScoped<IUserContext, UserContextService>();
+            builder.Services.AddHttpContextAccessor();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

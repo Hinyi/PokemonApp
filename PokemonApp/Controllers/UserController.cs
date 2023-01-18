@@ -6,7 +6,7 @@ using PokemonApp.Models.UserDto;
 
 namespace PokemonApp.Controllers
 {
-    [Route("api/controller")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
     {
@@ -24,6 +24,20 @@ namespace PokemonApp.Controllers
         {
             _userRepository.RegisterUser(dto);
             return Ok();
+        }  
+        
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginDto dto)
+        {
+            string token = _userRepository.GenerateJwt(dto);
+            return Ok(token);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateAddress([FromRoute] int id, [FromBody] UpdateAddressDto dto)
+        {
+            _userRepository.UpdateAddress(id, dto);
+            return NoContent();
         }
 
     }
