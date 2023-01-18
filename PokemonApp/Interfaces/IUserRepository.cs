@@ -5,5 +5,7 @@ namespace PokemonApp.Interfaces
     public interface IUserRepository
     {
         void RegisterUser(RegisterUserDto dto);
+        string GenerateJwt(LoginDto dto);
+        void UpdateAddress(int id,UpdateAddressDto dto);
     }
 }
