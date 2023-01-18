@@ -15,6 +15,9 @@
 
         public int? AddressId { get; set; }
         public virtual Address? Address { get; set; }
+        
+        public int? GymId { get; set; }
+        public virtual Gym? Gym { get; set; }
 
         public virtual List<PokemonUser>? PokemonUsers { get; set; }
 

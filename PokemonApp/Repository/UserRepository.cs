@@ -32,6 +32,7 @@ namespace PokemonApp.Repository
         public void RegisterUser(RegisterUserDto dto)
         {
             var isUserNicknameTaken = _context.Users.Where(x => x.Nickname == dto.Nickname).FirstOrDefault();
+
             if (isUserNicknameTaken is not null)
             {
                 throw new BadRequestException("Nickname is already in use");
@@ -48,8 +49,22 @@ namespace PokemonApp.Repository
                 Email = dto.Email,
                 RoleId= dto.RoleId,
                 Address = new Address(),
+                CreatedTime = DateTime.Now,
             };
 
+            //Check name of gym corresponding with gym id
+            if (dto.GymName.Any())
+            {
+                var gym = _context.Gyms.FirstOrDefault(x => x.Name.ToLower().Equals(dto.GymName.ToLower()));
+                if (gym is null)
+                {
+                    throw new BadRequestException("Gym of given name doesnt exist!");
+                }
+                else
+                {
+                    newUser.GymId = gym.Id;
+                }
+            }
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.PasswordHash = hashedPassword;
 
