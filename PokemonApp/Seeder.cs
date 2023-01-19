@@ -21,6 +21,12 @@ namespace PokemonApp
                     var roles = getRoles();
                     _dbContext.Roles.AddRange(roles);
                     _dbContext.SaveChanges();
+                }    
+                if (!_dbContext.Gyms.Any())
+                {
+                    var gyms = getGyms();
+                    _dbContext.Gyms.AddRange(gyms);
+                    _dbContext.SaveChanges();
                 }
             }
         }
@@ -44,5 +50,29 @@ namespace PokemonApp
             };
             return roles;
         }
+        private IEnumerable<Gym> getGyms()
+        {
+            var gyms = new List<Gym>()
+            {
+                new Gym()
+                {
+                    Name = "Pewter Gym"
+                },
+                new Gym()
+                {
+                    Name = "Cerulean Gym"
+                },
+                new Gym()
+                {
+                    Name = "Vermilion Gym"
+                },
+                new Gym()
+                {
+                    Name = "string"
+                }
+            };
+            return gyms;
+        }
+
     }
 }
