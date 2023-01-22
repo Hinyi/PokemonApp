@@ -34,15 +34,14 @@ namespace PokemonApp.Models.UserDto
                     }
                 });
 
-            RuleFor(x => x.Password);
-
             RuleFor(x => x.Nickname)
                 .Custom((value, context) =>
                 {
                     var nicknameInUse = _dbContext.Users.Any(x => x.Nickname == value);
                     if (nicknameInUse)
                     {
-                        throw new BadRequestException("Nickname is already in use");
+                        //throw new BadRequestException("Nickname is already in use");
+                        context.AddFailure("Nickname", "That nickname is taken");
                     }
                 });
         }

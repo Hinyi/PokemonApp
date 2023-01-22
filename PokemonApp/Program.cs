@@ -1,4 +1,7 @@
+using System.ComponentModel;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +11,8 @@ using PokemonApp.Data;
 using PokemonApp.Entities;
 using PokemonApp.Helper;
 using PokemonApp.Interfaces;
+using PokemonApp.Middleware;
+using PokemonApp.Models.UserDto;
 using PokemonApp.Repository;
 using PokemonApp.Service.UserContext;
 
@@ -54,12 +59,16 @@ namespace PokemonApp
             builder.Services.AddScoped<Seeder>();
             //Hash password service
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
+            //Added automapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //Adding middleware
+            builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            //Services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-            builder.Services.AddControllers();
-
+            builder.Services.AddControllers().AddFluentValidation();
+            //Validation
+            builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             //usercontext service
             builder.Services.AddScoped<IUserContext, UserContextService>();
             builder.Services.AddHttpContextAccessor();
@@ -76,6 +85,8 @@ namespace PokemonApp
             //Seed database if is null
             SeedDatabase();
 
+            //Use error handling middleware
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             //adding jwt response in header
             //app.UseSession();
             //app.Use(async (context, next) =>
@@ -94,6 +105,8 @@ namespace PokemonApp
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
