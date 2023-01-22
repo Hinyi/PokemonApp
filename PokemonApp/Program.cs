@@ -76,6 +76,18 @@ namespace PokemonApp
             //Seed database if is null
             SeedDatabase();
 
+            //adding jwt response in header
+            //app.UseSession();
+            //app.Use(async (context, next) =>
+            //{
+            //    var token = context.Session.GetString("Token");
+            //    if (!string.IsNullOrEmpty(token))
+            //    {
+            //        context.Request.Headers.Add("Authorization", "Bearer " + token);
+            //    }
+            //    await next();
+            //});
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

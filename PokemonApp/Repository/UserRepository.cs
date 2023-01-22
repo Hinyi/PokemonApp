@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PokemonApp.Data;
@@ -106,6 +107,7 @@ namespace PokemonApp.Repository
                 signingCredentials: cred);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            
             return tokenHandler.WriteToken(token);
         }
 
