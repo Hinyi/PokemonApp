@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PokemonApp.Data;
@@ -31,16 +32,16 @@ namespace PokemonApp.Repository
         }
         public void RegisterUser(RegisterUserDto dto)
         {
-            var isUserNicknameTaken = _context.Users.Where(x => x.Nickname == dto.Nickname).FirstOrDefault();
+            //var isUserNicknameTaken = _context.Users.Where(x => x.Nickname == dto.Nickname).FirstOrDefault();
 
-            if (isUserNicknameTaken is not null)
-            {
-                throw new BadRequestException("Nickname is already in use");
-            }
-            if (!dto.Password.Equals(dto.ConfirmPassword))
-            {
-                throw new BadRequestException("Passwords are not matching!");
-            }
+            //if (isUserNicknameTaken is not null)
+            //{
+            //    throw new BadRequestException("Nickname is already in use");
+            //}
+            //if (!dto.Password.Equals(dto.ConfirmPassword))
+            //{
+            //    throw new BadRequestException("Passwords are not matching!");
+            //}
             var newUser = new User()
             {
                 Name = dto.Name,
@@ -106,6 +107,7 @@ namespace PokemonApp.Repository
                 signingCredentials: cred);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            
             return tokenHandler.WriteToken(token);
         }
 
