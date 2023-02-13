@@ -44,6 +44,17 @@ namespace PokemonApp.Models.UserDto
                         context.AddFailure("Nickname", "That nickname is taken");
                     }
                 });
+
+            RuleFor(x => x.GymName)
+                .Custom((value, context) =>
+                    {
+                        var existingGym = _dbContext.Gyms.Any(x => x.Name == value);
+                        if (!existingGym)
+                        {
+                            context.AddFailure("Gym", "This gym doesn't exist");
+                        }
+                    }
+                );
         }
     }
 }
