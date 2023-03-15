@@ -14,6 +14,7 @@ namespace PokemonApp.Helper
             {
                 City = dto.City, Country = dto.Country, PostalCode = dto.PostalCode
             }));
+            CreateMap<UpdateUserGymDto, User>();
         }
     }
 }

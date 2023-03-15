@@ -33,13 +33,26 @@ namespace PokemonApp.Controllers
             return Ok(token);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}/address")]
         public ActionResult UpdateAddress([FromRoute] int id, [FromBody] UpdateAddressDto dto)
         {
             _userRepository.UpdateAddress(id, dto);
+            return Ok();
+        }        
+        [HttpPut("{id}/gym")]
+        public async Task<ActionResult> UpdateGym([FromRoute] int id, [FromBody] UpdateUserGymDto dto)
+        {
+            await _userRepository.UpdateGym(id, dto);
+            return Ok();
+        }
+
+        [HttpDelete("delete")]
+        public ActionResult Delete()
+        {
+            _userRepository.DeleteUser();
+
             return NoContent();
         }
-        
 
     }
 }

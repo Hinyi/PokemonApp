@@ -21,6 +21,16 @@ namespace PokemonApp.Middleware
             {
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
+            }           
+            catch (NotFoundException notFoundException)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(notFoundException.Message);
+            }            
+            catch (ForbidException forbidException)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(forbidException.Message);
             }
             catch (Exception ex)
             {
