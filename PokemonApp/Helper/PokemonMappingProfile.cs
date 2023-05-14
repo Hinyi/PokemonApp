@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PokemonApp.Entities;
+using PokemonApp.Models.PokemonDto;
 using PokemonApp.Models.UserDto;
 
 namespace PokemonApp.Helper
@@ -15,6 +16,8 @@ namespace PokemonApp.Helper
                 City = dto.City, Country = dto.Country, PostalCode = dto.PostalCode
             }));
             CreateMap<UpdateUserGymDto, User>();
+            CreateMap<PokemonDto, Pokemon>();
+            CreateMap<Pokemon, PokemonDto>();
         }
     }
 }

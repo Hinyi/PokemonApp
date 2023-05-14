@@ -137,7 +137,10 @@ namespace PokemonApp.Repository
 
         public void DeleteUser()
         {
-            //var userId = _userContextService.GetUserId;
+            if (_userContextService.GetUserId is null)
+            {
+                throw new NotFoundException("User is not logged");
+            }
 
             var user = _context.Users.FirstOrDefault(x =>x.Id == _userContextService.GetUserId);
 
@@ -146,7 +149,6 @@ namespace PokemonApp.Repository
                 throw new NotFoundException("User not found");
             }
 
-            //var temp = _userContextService.User;
             _context.Users.Remove(user);
             _context.SaveChanges();
         }

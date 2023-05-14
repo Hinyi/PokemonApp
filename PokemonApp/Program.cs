@@ -65,6 +65,7 @@ namespace PokemonApp
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             //Services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
 
             builder.Services.AddControllers().AddFluentValidation();
             //Validation
