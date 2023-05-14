@@ -12,6 +12,7 @@ using PokemonApp.Exceptions;
 using PokemonApp.Helper;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.UserDto;
+using PokemonApp.Service.UserContext;
 
 namespace PokemonApp.Repository
 {
@@ -21,27 +22,20 @@ namespace PokemonApp.Repository
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContextService;
 
         public UserRepository(PokemonDbContext context, IPasswordHasher<User> passwordHasher
-                ,AuthenticationSettings authenticationSettings, IMapper mapper)
+                ,AuthenticationSettings authenticationSettings, IMapper mapper, IUserContext userContextService)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
             _mapper = mapper;
+            _userContextService = userContextService;
         }
         public void RegisterUser(RegisterUserDto dto)
         {
-            //var isUserNicknameTaken = _context.Users.Where(x => x.Nickname == dto.Nickname).FirstOrDefault();
 
-            //if (isUserNicknameTaken is not null)
-            //{
-            //    throw new BadRequestException("Nickname is already in use");
-            //}
-            //if (!dto.Password.Equals(dto.ConfirmPassword))
-            //{
-            //    throw new BadRequestException("Passwords are not matching!");
-            //}
             var newUser = new User()
             {
                 Name = dto.Name,
@@ -51,21 +45,12 @@ namespace PokemonApp.Repository
                 RoleId= dto.RoleId,
                 Address = new Address(),
                 CreatedTime = DateTime.Now,
+                Gym = new Gym()
+                {
+                    Name = dto.GymName
+                },
             };
 
-            //Check name of gym corresponding with gym id
-            if (dto.GymName.Any())
-            {
-                var gym = _context.Gyms.FirstOrDefault(x => x.Name.ToLower().Equals(dto.GymName.ToLower()));
-                if (gym is null)
-                {
-                    throw new BadRequestException("Gym of given name doesnt exist!");
-                }
-                else
-                {
-                    newUser.GymId = gym.Id;
-                }
-            }
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.PasswordHash = hashedPassword;
 
@@ -113,7 +98,7 @@ namespace PokemonApp.Repository
 
         public void UpdateAddress(int id, UpdateAddressDto dto)
         {
-            var userAddress = _context.Users.FirstOrDefault(x => x.Id == id);
+            var userAddress = _context.Users.Include(r => r.Address).FirstOrDefault(x => x.Id == id);
 
             if (userAddress == null)
             {
@@ -126,6 +111,45 @@ namespace PokemonApp.Repository
             address.Country = dto.Country;
             address.PostalCode = dto.PostalCode;
 
+            _context.SaveChanges();
+        }       
+
+        public async Task UpdateGym(int id, UpdateUserGymDto dto)
+        {
+            var userGym = _context.Users.Include(r => r.Gym).FirstOrDefault(x => x.Id == id);
+
+            if (userGym == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            var gymId = _context.Gyms.FirstOrDefault(x => x.Name == dto.Name);
+            if (gymId is null)
+            {
+                throw new NotFoundException("Gym not found");
+            }
+
+            userGym.GymId = gymId.Id;
+
+            //_context.Update(gym);
+            await _context.SaveChangesAsync();
+        }
+
+        public void DeleteUser()
+        {
+            if (_userContextService.GetUserId is null)
+            {
+                throw new NotFoundException("User is not logged");
+            }
+
+            var user = _context.Users.FirstOrDefault(x =>x.Id == _userContextService.GetUserId);
+
+            if (user is null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            _context.Users.Remove(user);
             _context.SaveChanges();
         }
     }
