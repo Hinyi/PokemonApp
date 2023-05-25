@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
@@ -80,6 +81,12 @@ namespace PokemonApp
             //Nlogger
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
+
+            //mediatr
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+            });
 
             var app = builder.Build();
 

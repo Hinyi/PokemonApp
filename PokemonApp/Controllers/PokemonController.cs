@@ -4,6 +4,7 @@ using PokemonApp.Data;
 using PokemonApp.Entities;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.PokemonDto;
+using PokemonApp.Service.UserContext;
 
 namespace PokemonApp.Controllers
 {
@@ -13,11 +14,13 @@ namespace PokemonApp.Controllers
     {
         private readonly IPokemonRepository _pokemonRepository;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper)
+        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper, IUserContext userContext)
         {
             _pokemonRepository = pokemonRepository;
             _mapper = mapper;
+            _userContext = userContext;
         }
 
         [HttpGet]
@@ -43,9 +46,6 @@ namespace PokemonApp.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            //if (!ModelState.IsValid)
-            //    return BadRequest(ModelState);
-
             var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
 
 
@@ -53,6 +53,36 @@ namespace PokemonApp.Controllers
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created");
+        }        
+
+        [HttpPost("createpokemonJWT")]
+        public IActionResult CreatePokemonJWT([FromBody] PokemonDto pokemonCreate)
+        {
+            if (pokemonCreate == null)
+                return BadRequest(ModelState);
+
+            var pokemons = _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate);
+
+            if (pokemons != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
+
+            bool userIsLogged = _userContext.User is null ? false : true;
+
+            if (userIsLogged)
+            {
+                if (!_pokemonRepository.CreatePokemon(pokemonCreate.Category, pokemonMap))
+                {
+                    ModelState.AddModelError("", "Something went wrong while saving");
+                    return StatusCode(500, ModelState);
+                }
             }
 
             return Ok("Successfully created");

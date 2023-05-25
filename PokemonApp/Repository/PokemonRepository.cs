@@ -1,18 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using PokemonApp.Data;
 using PokemonApp.Entities;
+using PokemonApp.Exceptions;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.PokemonDto;
+using PokemonApp.Service.UserContext;
 
 namespace PokemonApp.Repository
 {
     public class PokemonRepository : IPokemonRepository
     {
         private readonly PokemonDbContext _context;
+        private readonly IUserContext _userContextService;
 
-        public PokemonRepository(PokemonDbContext context)
+        public PokemonRepository(PokemonDbContext context, IUserContext userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
@@ -47,9 +51,38 @@ namespace PokemonApp.Repository
             return Save();
         }
 
-        public bool CreatePokemon(int categoryId, Pokemon pokemon)
+        public bool CreatePokemon(string cat, Pokemon pokemon)
         {
-            throw new NotImplementedException();
+            var pokemonOwnerEntity = _context.Users.FirstOrDefault(a => a.Id == _userContextService.GetUserId);
+            var category = _context.Categories.FirstOrDefault(x => x.Name == cat);
+
+            if (pokemonOwnerEntity == null)
+                throw new NotFoundException("User is not logged in!");
+
+            var newPokemon = new Pokemon()
+            {
+                Name = pokemon.Name,
+                DateOfBirth = DateTime.Now,
+            };
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Category = category,
+                Pokemon = newPokemon,
+            };
+
+            var pokemonOwner = new PokemonUser()
+            {
+                User = pokemonOwnerEntity,
+                Pokemon = newPokemon,
+
+            };
+
+            _context.Add(pokemonCategory);
+            _context.Add(pokemonOwner);
+            _context.Add(newPokemon);
+
+            return Save();
         }
 
         public ICollection<Pokemon> GetPokemons()
