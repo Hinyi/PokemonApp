@@ -1,7 +1,9 @@
 using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,8 @@ using PokemonApp.Middleware;
 using PokemonApp.Models.UserDto;
 using PokemonApp.Repository;
 using PokemonApp.Service.UserContext;
+using Reviews;
+using Reviews.Command.AddNewReview;
 
 namespace PokemonApp
 {
@@ -56,6 +60,9 @@ namespace PokemonApp
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection"));
             });
 
+            //add mongo db
+            ReviewsModule.AddMongoDbCollection(builder.Services,builder.Configuration);
+
             //Added services of sedder
             builder.Services.AddScoped<Seeder>();
             //Hash password service
@@ -86,8 +93,9 @@ namespace PokemonApp
             builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(AddNewReviewHandler).Assembly);
             });
-
+            //builder.Services.AddMediatR(typeof(Program).Assembly);
             var app = builder.Build();
 
             //Seed database if is null
