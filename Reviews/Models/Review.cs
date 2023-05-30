@@ -19,7 +19,7 @@ namespace Reviews.Models
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal Rating { get; set; }
         public int PokemonId { get; set; }
-        public string CreatedTime = DateTime.Now.ToShortTimeString();
+        public DateTime CreatedTime = DateTime.Now;
 
     }
 }
