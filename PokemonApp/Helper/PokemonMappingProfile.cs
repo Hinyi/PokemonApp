@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using PokemonApp.Entities;
 using PokemonApp.Models.PokemonDto;
+using PokemonApp.Models.ReviewDto;
 using PokemonApp.Models.UserDto;
+using Review = Reviews.Models.Review;
 
 namespace PokemonApp.Helper
 {
@@ -18,6 +20,9 @@ namespace PokemonApp.Helper
             CreateMap<UpdateUserGymDto, User>();
             CreateMap<PokemonDto, Pokemon>();
             CreateMap<Pokemon, PokemonDto>();
+
+            CreateMap<AddNewReviewDto, Review>();
+            CreateMap<Review, AddNewReviewDto>();
         }
     }
 }
