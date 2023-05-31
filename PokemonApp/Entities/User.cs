@@ -8,9 +8,9 @@
         public string Nickname { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public DateTime? CreatedTime { get; set; }
+        public DateTime? CreatedTime { get; set; } = DateTime.UtcNow;
 
-        public int RoleId { get; set; }
+        public int RoleId { get; set; } = 1;
         public virtual Role Role { get; set; }
 
         public int? AddressId { get; set; }
