@@ -36,20 +36,25 @@ namespace PokemonApp.Repository
         public void RegisterUser(RegisterUserDto dto)
         {
 
-            var newUser = new User()
-            {
-                Name = dto.Name,
-                LastName= dto.LastName,
-                Nickname= dto.Nickname,
-                Email = dto.Email,
-                RoleId= dto.RoleId,
-                Address = new Address(),
-                CreatedTime = DateTime.Now,
-                Gym = new Gym()
-                {
-                    Name = dto.GymName
-                },
-            };
+            //var newUser = new User()
+            //{
+            //    Name = dto.Name,
+            //    LastName= dto.LastName,
+            //    Nickname= dto.Nickname,
+            //    Email = dto.Email,
+            //    RoleId= dto.RoleId,
+            //    Address = new Address(),
+            //    CreatedTime = DateTime.Now,
+            //    Gym = new Gym()
+            //    {
+            //        Name = dto.GymName
+            //    },
+            //};
+
+            //var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
+            //newUser.PasswordHash = hashedPassword;
+
+            var newUser = _mapper.Map<User>(dto);
 
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.PasswordHash = hashedPassword;
