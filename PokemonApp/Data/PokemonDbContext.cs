@@ -15,7 +15,7 @@ namespace PokemonApp.Data
         public DbSet<Reviewer> Reviewers { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<PokemonUser> PokemonUsers { get; set; }
-        public DbSet<PokemonCategory> PokemonCategories { get; set; }
+        //public DbSet<PokemonCategory> PokemonCategories { get; set; }
         public DbSet<Pokemon> Pokemons { get; set; }
         public DbSet<Gym> Gyms { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -23,16 +23,16 @@ namespace PokemonApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PokemonCategory>()
-                .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
-            modelBuilder.Entity<PokemonCategory>()
-                .HasOne(p => p.Pokemon)
-                .WithMany(pc => pc.PokemonCategories)
-                .HasForeignKey(p => p.PokemonId);
-            modelBuilder.Entity<PokemonCategory>()
-                .HasOne(p => p.Category)
-                .WithMany(pc => pc.PokemonCategories)
-                .HasForeignKey(c => c.CategoryId);
+            //modelBuilder.Entity<PokemonCategory>()
+            //    .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
+            //modelBuilder.Entity<PokemonCategory>()
+            //    .HasOne(p => p.Pokemon)
+            //    .WithMany(pc => pc.PokemonCategories)
+            //    .HasForeignKey(p => p.PokemonId);
+            //modelBuilder.Entity<PokemonCategory>()
+            //    .HasOne(p => p.Category)
+            //    .WithMany(pc => pc.PokemonCategories)
+            //    .HasForeignKey(c => c.CategoryId);
 
             modelBuilder.Entity<PokemonUser>()
                 .HasKey(po => new { po.PokemonId, UserId = po.UserId });

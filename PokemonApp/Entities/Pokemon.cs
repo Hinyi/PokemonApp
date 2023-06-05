@@ -9,7 +9,8 @@
 
         public List<Review> Reviews { get; set; }
         public List<PokemonUser> PokemonUsers { get; set; }
-        public List<PokemonCategory> PokemonCategories { get; set; }
+        //public List<PokemonCategory> PokemonCategories { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using PokemonApp.Data;
 using PokemonApp.Entities;
@@ -16,11 +17,14 @@ namespace PokemonApp.Repository
     {
         private readonly PokemonDbContext _context;
         private readonly IUserContext _userContextService;
+        private readonly IMapper _mapper;
 
-        public PokemonRepository(PokemonDbContext context, IUserContext userContextService)
+        public PokemonRepository(PokemonDbContext context
+            , IUserContext userContextService, IMapper mapper)
         {
             _context = context;
             _userContextService = userContextService;
+            _mapper = mapper;
         }
 
         public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
@@ -111,41 +115,57 @@ namespace PokemonApp.Repository
 
             //var pokemonsWithCategory =await _context.PokemonCategories
             //    .Where(x => x.PokemonId == pokemons.ToListAsync);
-            var pokemons1 = _context.PokemonCategories
-                .Include(x => x.Category)
-                .Include(x => x.Pokemon)
-                .Select(x => new GetAllPokemonsPaginated
+            //var pokemons1 = _context.PokemonCategories
+            //    .Include(x => x.Category)
+            //    .Include(x => x.Pokemon)
+            //    .Select(x => new GetAllPokemonsPaginated
+            //    {
+            //        Name = x.Pokemon.Name,
+            //        Id = x.Pokemon.Id,
+            //        Categories = x.Category.Name,
+            //    })
+            //    .AsNoTracking()
+            //    .AsQueryable();
+
+            //var pokemonGroup = _context.Pokemons
+            //    .GroupJoin(_context.PokemonCategories,
+            //        pokemon => pokemon.Id,
+            //        pokemonCategory => pokemonCategory.PokemonId,
+            //        (pokemon, pokemonCategories) => new
+            //        {
+            //            Id = pokemon.Id,
+            //            Name = pokemon.Name,
+
+            //            Categories = _context.Categories.Join(pokemonCategories,
+            //                category => category.Id,
+            //                pokemonCategory => pokemonCategory.CategoryId,
+            //                (category, pokemonCategoriesThis) => new
+            //                {
+            //                    Id = category.Id,
+            //                    Name = category.Name,
+            //                })
+            //        })
+            //    .AsNoTracking()
+            //    .AsQueryable();
+
+            var pokemons1 = _context.Pokemons
+                .Select(pokemons => new GetAllPokemonsPaginated()
                 {
-                    Name = x.Pokemon.Name,
-                    Id = x.Pokemon.Id,
-                    Categories = x.Category.Name,
+                    Id = pokemons.Id,
+                    Name = pokemons.Name,
+                    Categories = pokemons.Categories.Select(category => new
+                    {
+                        CategoryName = category.Name,
+                    })
                 })
                 .AsNoTracking()
                 .AsQueryable();
-
-            var pokemonGroup = _context.Pokemons
-                .GroupJoin(_context.PokemonCategories,
-                    pokemon => pokemon.Id,
-                    pokemonCategory => pokemonCategory.PokemonId,
-                    (pokemon, pokemonCategories) => new
-                    {
-                        Id = pokemon.Id,
-                        Name = pokemon.Name,
-
-                        Categories = _context.Categories.Join(pokemonCategories,
-                            category => category.Id,
-                            pokemonCategory => pokemonCategory.CategoryId,
-                            (category, pokemonCategoriesThis) => new
-                            {
-                                Id = category.Id,
-                                Name = category.Name,
-                            })
-                    });
 
             var orderBy = SortDirection.Ascending == sortDirection
                 ? pokemons1.OrderBy(x => x.Id)
                 : pokemons1.OrderByDescending(x => x.Id);
 
+            //PagedResult<GetAllPokemonsPaginated> result = null;
             var result = await PagedResult<GetAllPokemonsPaginated>
                 .CreateAsync(orderBy, pageNumber, pageSize);
             return result;
