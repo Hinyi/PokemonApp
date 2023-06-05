@@ -101,52 +101,6 @@ namespace PokemonApp.Repository
         public async Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query)
         {
             var (pageNumber, pageSize, sortDirection) = query;
-            //var pokemons = _context.Pokemons
-            //    .Include(x => x.PokemonCategories)
-            //    //.Include(x=> x.)
-            //    .Select(x => new GetAllPokemonsPaginated
-            //    {
-            //        Id = x.Id,
-            //        Name = x.Name,
-            //        Categories = x.PokemonCategories
-            //    })
-            //    .AsNoTracking()
-            //    .AsQueryable();
-
-            //var pokemonsWithCategory =await _context.PokemonCategories
-            //    .Where(x => x.PokemonId == pokemons.ToListAsync);
-            //var pokemons1 = _context.PokemonCategories
-            //    .Include(x => x.Category)
-            //    .Include(x => x.Pokemon)
-            //    .Select(x => new GetAllPokemonsPaginated
-            //    {
-            //        Name = x.Pokemon.Name,
-            //        Id = x.Pokemon.Id,
-            //        Categories = x.Category.Name,
-            //    })
-            //    .AsNoTracking()
-            //    .AsQueryable();
-
-            //var pokemonGroup = _context.Pokemons
-            //    .GroupJoin(_context.PokemonCategories,
-            //        pokemon => pokemon.Id,
-            //        pokemonCategory => pokemonCategory.PokemonId,
-            //        (pokemon, pokemonCategories) => new
-            //        {
-            //            Id = pokemon.Id,
-            //            Name = pokemon.Name,
-
-            //            Categories = _context.Categories.Join(pokemonCategories,
-            //                category => category.Id,
-            //                pokemonCategory => pokemonCategory.CategoryId,
-            //                (category, pokemonCategoriesThis) => new
-            //                {
-            //                    Id = category.Id,
-            //                    Name = category.Name,
-            //                })
-            //        })
-            //    .AsNoTracking()
-            //    .AsQueryable();
 
             var pokemons1 = _context.Pokemons
                 .Select(pokemons => new GetAllPokemonsPaginated()
@@ -165,7 +119,6 @@ namespace PokemonApp.Repository
                 ? pokemons1.OrderBy(x => x.Id)
                 : pokemons1.OrderByDescending(x => x.Id);
 
-            //PagedResult<GetAllPokemonsPaginated> result = null;
             var result = await PagedResult<GetAllPokemonsPaginated>
                 .CreateAsync(orderBy, pageNumber, pageSize);
             return result;
