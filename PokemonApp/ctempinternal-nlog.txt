@@ -1,0 +1,37 @@
+2023-06-01 20:52:15.0022 Info Message Template Auto Format enabled
+2023-06-01 20:52:15.0207 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 20:52:15.0728 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 20:52:15.0728 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 20:52:15.0818 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 20:52:15.1215 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 20:53:15.9353 Info Message Template Auto Format enabled
+2023-06-01 20:53:15.9540 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 20:53:16.0068 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 20:53:16.0136 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 20:53:16.0187 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 20:53:16.0567 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 20:53:46.2529 Info Message Template Auto Format enabled
+2023-06-01 20:53:46.2698 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 20:53:46.3211 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 20:53:46.3211 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 20:53:46.3324 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 20:53:46.3708 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 20:53:47.8385 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 20:58:20.4416 Info Message Template Auto Format enabled
+2023-06-01 20:58:20.4587 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 20:58:20.5100 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 20:58:20.5100 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 20:58:20.5189 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 20:58:20.5560 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 20:58:40.2664 Info Message Template Auto Format enabled
+2023-06-01 20:58:40.2783 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 20:58:40.3173 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 20:58:40.3228 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 20:58:40.3289 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 20:58:40.3542 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-06-01 21:00:05.7538 Info Message Template Auto Format enabled
+2023-06-01 21:00:05.7681 Info Loading assembly: NLog.Web.AspNetCore
+2023-06-01 21:00:05.8204 Info Registered target NLog.Targets.FileTarget(Name=request-time)
+2023-06-01 21:00:05.8204 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2023-06-01 21:00:05.8314 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-06-01 21:00:05.8694 Info Validating config: TargetNames=allfile, exceptions, request-time, ConfigItems=58, FilePath=/app/bin/Debug/net6.0/NLog.config

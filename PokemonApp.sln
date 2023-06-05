@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonApp", "PokemonApp\Po
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonAppTests", "PokemonAppTests\PokemonAppTests.csproj", "{C00FF84F-F61D-463C-963D-6D7335A311BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reviews", "Reviews\Reviews.csproj", "{7DC5358E-AD8C-4051-B13B-F0EBA448C65F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reviews", "Reviews\Reviews.csproj", "{7DC5358E-AD8C-4051-B13B-F0EBA448C65F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{3E915868-2883-40F3-B16F-A411E2C0E995}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{3E915868-2883-40F3-B16F-A411E2C0E995}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

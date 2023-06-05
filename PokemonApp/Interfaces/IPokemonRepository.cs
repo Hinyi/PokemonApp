@@ -1,5 +1,6 @@
 ﻿using PokemonApp.Entities;
 using PokemonApp.Models.PokemonDto;
+using PokemonApp.Repository;
 
 namespace PokemonApp.Interfaces
 {
@@ -10,5 +11,6 @@ namespace PokemonApp.Interfaces
         ICollection<Pokemon> GetPokemons();
         public Pokemon GetPokemonTrimToUpper(PokemonDto pokemonCreate);
         bool Save();
+        Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query);
     }
 }
