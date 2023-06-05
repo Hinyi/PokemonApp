@@ -4,6 +4,7 @@ using PokemonApp.Data;
 using PokemonApp.Entities;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.PokemonDto;
+using PokemonApp.Repository;
 using PokemonApp.Service.UserContext;
 
 namespace PokemonApp.Controllers
@@ -29,6 +30,13 @@ namespace PokemonApp.Controllers
             var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            return Ok(pokemons);
+        }
+
+        [HttpGet("getallpaged")]
+        public async Task<ActionResult> GetAllPokemons([FromQuery] GetPokemons query)
+        {
+            var pokemons = await _pokemonRepository.GetAllPokemonsPaged(query);
             return Ok(pokemons);
         }
 
