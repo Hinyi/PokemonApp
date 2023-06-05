@@ -74,9 +74,9 @@ namespace PokemonApp.Controllers
 
             var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
 
-            bool userIsLogged = _userContext.User is null ? false : true;
+            bool userIsLoggedIn = _userContext.User is null ? false : true;
 
-            if (userIsLogged)
+            if (userIsLoggedIn)
             {
                 if (!_pokemonRepository.CreatePokemon(pokemonCreate.Category, pokemonMap))
                 {
