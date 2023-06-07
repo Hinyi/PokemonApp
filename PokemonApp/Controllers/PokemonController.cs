@@ -40,6 +40,22 @@ namespace PokemonApp.Controllers
             return Ok(pokemons);
         }
 
+        [HttpGet("getpokemonbyid")]
+        public async Task<ActionResult> GetPokemonById(int id)
+        {
+            var pokemon = _pokemonRepository.GetPokemon(id);
+            return Ok(pokemon);
+        }   
+        
+        [HttpGet("getpokemonbyname")]
+        public async Task<ActionResult> GetPokemonById(string name)
+        {
+            var pokemon = _pokemonRepository.GetPokemon(name);
+            return Ok(pokemon);
+        }
+
+
+
         [HttpPost("createpokemon")]
         public IActionResult CreatePokemon([FromQuery] int userId, [FromQuery] int catId, [FromBody] PokemonDto pokemonCreate)
         {

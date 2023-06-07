@@ -98,6 +98,15 @@ namespace PokemonApp.Repository
             return _context.Pokemons.OrderBy(x => x.Id).ToList();
         }
 
+        public Pokemon GetPokemon(int id)
+        {
+            return _context.Pokemons.FirstOrDefault(x => x.Id == id);
+        }
+        public Pokemon GetPokemon(string name)
+        {
+            return _context.Pokemons.FirstOrDefault(x => x.Name == name);
+        }
+
         public async Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query)
         {
             var (pageNumber, pageSize, sortDirection) = query;

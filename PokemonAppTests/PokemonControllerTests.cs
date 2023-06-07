@@ -62,7 +62,7 @@ namespace PokemonAppTests
         //}
 
         [Fact]
-        public void PokemonController_CreatePokemon_InvalidModel()
+        public void PokemonController_CreatePokemon_ReturnOk()
         {
             //arange
             int userId = 1;
