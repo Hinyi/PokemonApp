@@ -76,16 +76,5 @@ namespace PokemonAppTests
             result.Id.Should().Be(id);
             result.Should().BeOfType<Pokemon>();
         }
-
-        [Fact]
-        public async void PokemonRepository_CreatePokemon_ValidModel()
-        {
-            //Arrange
-            var ownerId = 5;
-            int category = 18;
-            //Act
-
-            //Assert
-        }
     }
 }
