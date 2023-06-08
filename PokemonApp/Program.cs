@@ -60,6 +60,13 @@ namespace PokemonApp
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection"));
             });
 
+            //Add redis
+            builder.Services.AddStackExchangeRedisCache(redisOption =>
+            {
+                string connection = builder.Configuration
+                    .GetConnectionString("Redis");
+                redisOption.Configuration = connection;
+            });
             //add mongo db
             ReviewsModule.AddMongoDbCollection(builder.Services,builder.Configuration);
             //add memory cache

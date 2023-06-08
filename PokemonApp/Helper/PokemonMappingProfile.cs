@@ -19,7 +19,10 @@ namespace PokemonApp.Helper
             }));
             CreateMap<UpdateUserGymDto, User>();
             CreateMap<PokemonDto, Pokemon>();
-            CreateMap<Pokemon, PokemonDto>();
+            CreateMap<Pokemon, PokemonDto>();    
+            
+            CreateMap<GetPokemonDto, Pokemon>();
+            CreateMap<Pokemon, GetPokemonDto>();
 
             CreateMap<AddNewReviewDto, Review>();
             CreateMap<Review, AddNewReviewDto>();

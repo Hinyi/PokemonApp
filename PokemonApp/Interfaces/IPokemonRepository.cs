@@ -12,7 +12,7 @@ namespace PokemonApp.Interfaces
         public Pokemon GetPokemonTrimToUpper(PokemonDto pokemonCreate);
         bool Save();
         Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query);
-        Pokemon GetPokemon(int id);
-        Pokemon GetPokemon(string name);
+        Task<Pokemon> GetPokemon(int id);
+        Task<GetOnePokemon<GetPokemonDto>> GetPokemon(string name);
     }
 }

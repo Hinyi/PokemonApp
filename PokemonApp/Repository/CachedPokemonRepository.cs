@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using PokemonApp.Entities;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.PokemonDto;
@@ -9,11 +11,51 @@ namespace PokemonApp.Repository
     {
         private readonly PokemonRepository _decorated;
         private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _distributedCache;
 
-        public CachedPokemonRepository(PokemonRepository decorated, IMemoryCache memoryCache)
+        public CachedPokemonRepository(PokemonRepository decorated, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             _decorated = decorated;
             _memoryCache = memoryCache;
+            _distributedCache = distributedCache;
+        }
+
+        public async Task<Pokemon> GetPokemon(int id)
+        {
+            string key = $"member-{id}";
+
+            string? cachedPokemon = await _distributedCache.GetStringAsync(key);
+
+            Pokemon? pokemon;
+            if (string.IsNullOrEmpty(cachedPokemon))
+            {
+                pokemon = await _decorated.GetPokemon(id);
+
+                if (pokemon is null)
+                    return pokemon;
+
+                await _distributedCache.SetStringAsync(
+                    key,
+                    JsonConvert.SerializeObject(pokemon));
+                return pokemon;
+            }
+
+            pokemon = JsonConvert.DeserializeObject<Pokemon>(cachedPokemon);
+
+            return pokemon;
+        }
+
+        public async Task<GetOnePokemon<GetPokemonDto>> GetPokemon(string name)
+        {
+            string key = $"member-{name}";
+            return await _memoryCache.GetOrCreateAsync(
+                key,
+                entry =>
+                {
+                    entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+
+                    return _decorated.GetPokemon(name);
+                });
         }
 
         public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon) =>
@@ -34,30 +76,5 @@ namespace PokemonApp.Repository
         public Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query) =>
             _decorated.GetAllPokemonsPaged(query);
 
-        public Pokemon GetPokemon(int id)
-        {
-            string key = $"member-{id}";
-            return _memoryCache.GetOrCreate(
-                key,
-                entry =>
-                {
-                    entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-
-                    return _decorated.GetPokemon(id);
-                });
-        }
-
-        public Pokemon GetPokemon(string name)
-        {
-            string key = $"member-{name}";
-            return _memoryCache.GetOrCreate(
-                key,
-                entry =>
-                {
-                    entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-
-                    return _decorated.GetPokemon(name);
-                });
-        }
     }
 }

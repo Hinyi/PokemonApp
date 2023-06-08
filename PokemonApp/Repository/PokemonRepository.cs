@@ -98,13 +98,31 @@ namespace PokemonApp.Repository
             return _context.Pokemons.OrderBy(x => x.Id).ToList();
         }
 
-        public Pokemon GetPokemon(int id)
+        public async Task<Pokemon> GetPokemon(int id)
         {
-            return _context.Pokemons.FirstOrDefault(x => x.Id == id);
+            return await _context.Pokemons.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
         }
-        public Pokemon GetPokemon(string name)
+        public async Task<GetOnePokemon<GetPokemonDto>> GetPokemon(string name)
         {
-            return _context.Pokemons.FirstOrDefault(x => x.Name == name);
+            var pokemon = _context.Pokemons
+                //.Include(x => x.Categories)
+                //.FirstOrDefaultAsync(x => x.Name == name);
+                .Where(x => x.Name == name)
+                .Select(pokemon => new GetPokemonDto()
+                {
+                    Name = pokemon.Name,
+                    BirthDateTime = pokemon.DateOfBirth,
+                    Category = pokemon.Categories.Select(x => new 
+                    {
+                        x.Name
+                    })
+                })
+                .AsNoTracking()
+                .AsQueryable();
+
+            var result = await GetOnePokemon<GetPokemonDto>.CreateAsync(pokemon);
+
+            return result;
         }
 
         public async Task<PagedResult<GetAllPokemonsPaginated>> GetAllPokemonsPaged(GetPokemons query)
