@@ -62,7 +62,8 @@ namespace PokemonApp
 
             //add mongo db
             ReviewsModule.AddMongoDbCollection(builder.Services,builder.Configuration);
-
+            //add memory cache
+            builder.Services.AddMemoryCache();
             //Added services of sedder
             builder.Services.AddScoped<Seeder>();
             //Hash password service
@@ -73,7 +74,8 @@ namespace PokemonApp
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             //Services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+            builder.Services.AddScoped<PokemonRepository>();
+            builder.Services.AddScoped<IPokemonRepository, CachedPokemonRepository>();
 
             builder.Services.AddControllers().AddFluentValidation();
             //Validation
