@@ -21,6 +21,7 @@ using PokemonApp.Service.CachingService;
 using PokemonApp.Service.UserContext;
 using Reviews;
 using Reviews.Command.AddNewReview;
+using Serilog;
 
 namespace PokemonApp
 {
@@ -31,8 +32,14 @@ namespace PokemonApp
             var builder = WebApplication.CreateBuilder(args);
 
             //Logger
-            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-            logger.Debug("init main");
+            //var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            //logger.Debug("init main");
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
 
             //JWT authorization
             var authenticationSettings = new AuthenticationSettings();
@@ -99,8 +106,8 @@ namespace PokemonApp
             builder.Services.AddSwaggerGen();
 
             //Nlogger
-            builder.Logging.ClearProviders();
-            builder.Host.UseNLog();
+            //builder.Logging.ClearProviders();
+            //builder.Host.UseNLog();
 
 
             //mediatr
