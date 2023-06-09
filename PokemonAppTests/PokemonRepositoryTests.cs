@@ -58,8 +58,9 @@ namespace PokemonAppTests
             var result = pokemonRepository.GetPokemon(name);
             //Assert
             result.Should().NotBeNull();
-            result.Name.Should().Be(name);
+            result.Result.Name.Should().Be(name);
             result.Should().BeOfType<Pokemon>();
+            
         }
 
         [Fact]
