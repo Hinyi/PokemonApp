@@ -17,6 +17,7 @@ using PokemonApp.Interfaces;
 using PokemonApp.Middleware;
 using PokemonApp.Models.UserDto;
 using PokemonApp.Repository;
+using PokemonApp.Service.CachingService;
 using PokemonApp.Service.UserContext;
 using Reviews;
 using Reviews.Command.AddNewReview;
@@ -71,6 +72,9 @@ namespace PokemonApp
             ReviewsModule.AddMongoDbCollection(builder.Services,builder.Configuration);
             //add memory cache
             builder.Services.AddMemoryCache();
+            //Add redis
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSingleton<ICacheService, CacheService>();
             //Added services of sedder
             builder.Services.AddScoped<Seeder>();
             //Hash password service
@@ -97,6 +101,7 @@ namespace PokemonApp
             //Nlogger
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
+
 
             //mediatr
             builder.Services.AddMediatR(cfg =>

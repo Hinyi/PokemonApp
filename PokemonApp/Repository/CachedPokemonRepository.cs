@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using PokemonApp.Entities;
+using PokemonApp.Helper;
 using PokemonApp.Interfaces;
 using PokemonApp.Models.PokemonDto;
 
@@ -19,6 +20,8 @@ namespace PokemonApp.Repository
             _memoryCache = memoryCache;
             _distributedCache = distributedCache;
         }
+        public ICollection<Pokemon> GetPokemons() =>
+            _decorated.GetPokemons();
 
         public async Task<Pokemon> GetPokemon(int id)
         {
@@ -40,7 +43,15 @@ namespace PokemonApp.Repository
                 return pokemon;
             }
 
-            pokemon = JsonConvert.DeserializeObject<Pokemon>(cachedPokemon);
+            pokemon = JsonConvert.DeserializeObject<Pokemon>(cachedPokemon,
+                new JsonSerializerSettings
+                {
+                    //if constructor is not public
+                    ConstructorHandling = 
+                        ConstructorHandling.AllowNonPublicDefaultConstructor,
+                    //if set property is private
+                    ContractResolver = new PrivateResolver()
+                });
 
             return pokemon;
         }
@@ -64,8 +75,6 @@ namespace PokemonApp.Repository
         public bool CreatePokemon(string cat, Pokemon pokemon) =>
             _decorated.CreatePokemon(cat, pokemon);
 
-        public ICollection<Pokemon> GetPokemons() =>
-            _decorated.GetPokemons();
 
         public Pokemon GetPokemonTrimToUpper(PokemonDto pokemonCreate) =>
             _decorated.GetPokemonTrimToUpper(pokemonCreate);

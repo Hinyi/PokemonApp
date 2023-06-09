@@ -5,6 +5,7 @@ using Reviews.Command.AddNewReview;
 using Reviews.Command.DeleteAllData;
 using Reviews.Models;
 using Reviews.Query.GetAllReviews;
+using Reviews.Query.GetReviewsByName;
 using Reviews.ReadModels;
 
 namespace PokemonApp.Controllers
@@ -26,6 +27,17 @@ namespace PokemonApp.Controllers
         public async Task<ActionResult<List<Review>>> GetAllReviews()
         {
             var request = new GetAllReviewsQuery();
+            var reviews = await _mediator.Send(request);
+            return Ok(reviews);
+        }        
+        
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<Review>>> GetAllReviews(string name)
+        {
+            var request = new GetReviewsByNameQuery()
+            {
+                Name = name
+            };
             var reviews = await _mediator.Send(request);
             return Ok(reviews);
         }
