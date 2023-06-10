@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using PokemonApp.Data;
 using PokemonApp.Entities;
 using PokemonApp.Helper;
 using PokemonApp.Interfaces;
@@ -13,16 +14,19 @@ namespace PokemonApp.Repository
         private readonly PokemonRepository _decorated;
         private readonly IMemoryCache _memoryCache;
         private readonly IDistributedCache _distributedCache;
+        private readonly PokemonDbContext _context;
 
-        public CachedPokemonRepository(PokemonRepository decorated, IMemoryCache memoryCache, IDistributedCache distributedCache)
+        public CachedPokemonRepository(PokemonRepository decorated, IMemoryCache memoryCache, IDistributedCache distributedCache, PokemonDbContext context)
         {
             _decorated = decorated;
             _memoryCache = memoryCache;
             _distributedCache = distributedCache;
+            _context = context;
         }
         public ICollection<Pokemon> GetPokemons() =>
             _decorated.GetPokemons();
 
+        //distributed cache - Redis
         public async Task<Pokemon> GetPokemon(int id)
         {
             string key = $"member-{id}";
@@ -53,9 +57,13 @@ namespace PokemonApp.Repository
                     ContractResolver = new PrivateResolver()
                 });
 
+            if (pokemon is not null)
+                _context.Set<Pokemon>().Attach(pokemon);
+
             return pokemon;
         }
 
+        //In memmory cache
         public async Task<GetOnePokemon<GetPokemonDto>> GetPokemon(string name)
         {
             string key = $"member-{name}";
